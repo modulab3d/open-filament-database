@@ -59,6 +59,30 @@ interface Variant {
 }
 
 const allowedImageTypes = "png|jpg|jpeg|svg";
+const MAX_CONCURRENT_FILE_TASKS = 24;
+
+async function mapWithConcurrency<T, R>(
+  items: T[],
+  concurrency: number,
+  mapper: (item: T) => Promise<R>,
+): Promise<R[]> {
+  if (items.length === 0) return [];
+
+  const safeConcurrency = Math.max(1, Math.min(concurrency, items.length));
+  const results: R[] = new Array(items.length);
+  let cursor = 0;
+
+  const worker = async () => {
+    while (cursor < items.length) {
+      const currentIndex = cursor;
+      cursor += 1;
+      results[currentIndex] = await mapper(items[currentIndex]);
+    }
+  };
+
+  await Promise.all(Array.from({ length: safeConcurrency }, () => worker()));
+  return results;
+}
 
 export async function loadFilamentDatabase(dataPath: string, storesPath: string): Promise<FilamentDatabase> {
   console.log('Running optimized parser!');
@@ -71,7 +95,7 @@ export async function loadFilamentDatabase(dataPath: string, storesPath: string)
     const brandDirents = brandFolders.filter((dirent) => dirent.isDirectory());
 
     // Process all brands in parallel
-    const brandPromises = brandDirents.map(async (brandFolder) => {
+    const brandResults = await mapWithConcurrency(brandDirents, MAX_CONCURRENT_FILE_TASKS, async (brandFolder) => {
       const folderName = stripOfIllegalChars(brandFolder.name)
       const brandPath = join(dataPath, folderName);
       const brandJsonPath = join(brandPath, 'brand.json');
@@ -93,7 +117,7 @@ export async function loadFilamentDatabase(dataPath: string, storesPath: string)
       const materialDirents = materialFolders.filter((dirent) => dirent.isDirectory());
 
       // Process all materials in parallel
-      const materialPromises = materialDirents.map(async (materialFolder) => {
+      const materialResults = await mapWithConcurrency(materialDirents, MAX_CONCURRENT_FILE_TASKS, async (materialFolder) => {
         const materialPath = join(brandPath, materialFolder.name);
         const materialJsonPath = join(materialPath, 'material.json');
 
@@ -106,7 +130,7 @@ export async function loadFilamentDatabase(dataPath: string, storesPath: string)
         const filamentDirents = filamentFolders.filter((dirent) => dirent.isDirectory());
 
         // Process all filaments in parallel
-        const filamentPromises = filamentDirents.map(async (filamentFolder) => {
+        const filamentResults = await mapWithConcurrency(filamentDirents, MAX_CONCURRENT_FILE_TASKS, async (filamentFolder) => {
           const filamentPath = join(materialPath, filamentFolder.name);
           const filamentJsonPath = join(filamentPath, 'filament.json');
 
@@ -119,7 +143,7 @@ export async function loadFilamentDatabase(dataPath: string, storesPath: string)
           const colorDirents = colorFolders.filter((dirent) => dirent.isDirectory());
 
           // Process all colors in parallel
-          const colorPromises = colorDirents.map(async (colorFolder) => {
+          const colorResults = await mapWithConcurrency(colorDirents, MAX_CONCURRENT_FILE_TASKS, async (colorFolder) => {
             const colorPath = join(filamentPath, colorFolder.name);
             const sizesJsonPath = join(colorPath, 'sizes.json');
             const variantJsonPath = join(colorPath, 'variant.json');
@@ -146,7 +170,6 @@ export async function loadFilamentDatabase(dataPath: string, storesPath: string)
             };
           });
 
-          const colorResults = await Promise.all(colorPromises);
           const colors: Record<string, Color> = {};
 
           colorResults.forEach((result) => {
@@ -164,7 +187,6 @@ export async function loadFilamentDatabase(dataPath: string, storesPath: string)
           };
         });
 
-        const filamentResults = await Promise.all(filamentPromises);
         const filaments: Record<string, Filament> = {};
 
         filamentResults.forEach((result) => {
@@ -181,7 +203,6 @@ export async function loadFilamentDatabase(dataPath: string, storesPath: string)
         };
       });
 
-      const materialResults = await Promise.all(materialPromises);
       const materials: Record<string, Material> = {};
 
       materialResults.forEach((result) => {
@@ -201,8 +222,6 @@ export async function loadFilamentDatabase(dataPath: string, storesPath: string)
       };
     });
 
-    const brandResults = await Promise.all(brandPromises);
-
     brandResults.forEach((result) => {
       if (result) brands[result.key] = result.value;
     });
@@ -210,7 +229,7 @@ export async function loadFilamentDatabase(dataPath: string, storesPath: string)
     const storesFolders = await readdir(storesPath, { withFileTypes: true });
     const storesDirents = storesFolders.filter((dirent) => dirent.isDirectory());
 
-    const storesPromises = storesDirents.map(async (storeFolder) => {
+    const storeResults = await mapWithConcurrency(storesDirents, MAX_CONCURRENT_FILE_TASKS, async (storeFolder) => {
       const folderName = storeFolder.name;
       const storePath = join(storesPath, folderName);
       const storeJsonPath = join(storePath, "store.json")
@@ -239,8 +258,6 @@ export async function loadFilamentDatabase(dataPath: string, storesPath: string)
         },
       };
     });
-
-    const storeResults = await Promise.all(storesPromises);
 
     storeResults.forEach((result) => {
       if (result) stores[result.key] = result.value;
