@@ -7,9 +7,15 @@
     "safety_sheet_url": "https://cdn.shopify.com/s/files/1/0584/7236/6216/files/Bambu_PET-CF_MSDS.pdf",
     "slicer_settings": {
         "bambustudio": {
+            "id": "GFT01",
             "profile_name": "Bambu PET-CF"
         },
         "orcaslicer": {
+            "id": "GFT01",
+            "profile_name": "Bambu PET-CF"
+        },
+        "elegooslicer": {
+            "id": "GFT01",
             "profile_name": "Bambu PET-CF"
         }
     }

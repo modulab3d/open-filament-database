@@ -1,0 +1,9 @@
+{
+  "id": "blue",
+  "name": "Blue",
+  "color_hex": "#6495ED",
+  "traits": {
+    "imitates_marble": true,
+    "imitates_stone": true
+  }
+}

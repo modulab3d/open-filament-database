@@ -7,9 +7,18 @@
     "safety_sheet_url": "https://cdn.shopify.com/s/files/1/0584/7236/6216/files/Bambu_PC_FR_MSDS.pdf?v=1734509581",
     "slicer_settings": {
         "bambustudio": {
+            "generic_id": "GFC99",
+            "id": "GFC01",
             "profile_name": "Bambu PC FR"
         },
         "orcaslicer": {
+            "generic_id": "GFC99",
+            "id": "GFC01",
+            "profile_name": "Bambu PC FR"
+        },
+        "elegooslicer": {
+            "generic_id": "GFC99",
+            "id": "GFC01",
             "profile_name": "Bambu PC FR"
         }
     }

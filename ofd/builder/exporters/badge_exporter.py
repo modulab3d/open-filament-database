@@ -36,12 +36,12 @@ def _render_badge(label: str, value: str, color: str) -> str:
     """Render a flat-style SVG badge matching GitHub/shields.io style."""
     hex_color = COLORS.get(color, color)
 
-    label_w = _text_width(label) + _PADDING * 2
-    value_w = _text_width(value) + _PADDING * 2
-    total_w = label_w + value_w
+    label_w = round(_text_width(label) + _PADDING * 2, 1)
+    value_w = round(_text_width(value) + _PADDING * 2, 1)
+    total_w = round(label_w + value_w, 1)
 
-    label_x = label_w / 2
-    value_x = label_w + value_w / 2
+    label_x = round(label_w / 2, 1)
+    value_x = round(label_w + value_w / 2, 1)
     text_y = 14  # baseline for 20px height badge
 
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{total_w}" height="{_HEIGHT}">
@@ -65,8 +65,8 @@ def _render_badge(label: str, value: str, color: str) -> str:
 
 
 def export_badges(db: Database, output_dir: str, **kwargs):
-    """Export SVG badge images to dist/badges/."""
-    badges_path = Path(output_dir) / "badges"
+    """Export SVG badge images to dist/api/v1/badges/."""
+    badges_path = Path(output_dir) / "api" / "v1" / "badges"
     badges_path.mkdir(parents=True, exist_ok=True)
 
     badges = {
@@ -79,7 +79,7 @@ def export_badges(db: Database, output_dir: str, **kwargs):
     for name, (label, value, color) in badges.items():
         svg = _render_badge(label, value, color)
         badge_file = badges_path / f"{name}.svg"
-        with open(badge_file, 'w', encoding='utf-8') as f:
+        with open(badge_file, "w", encoding="utf-8") as f:
             f.write(svg)
 
     print(f"  Written: {len(badges)} badge SVGs to {badges_path}")

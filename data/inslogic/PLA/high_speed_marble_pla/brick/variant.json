@@ -1,0 +1,9 @@
+{
+  "id": "brick",
+  "name": "Brick",
+  "color_hex": "#A0522D",
+  "traits": {
+    "imitates_marble": true,
+    "imitates_stone": true
+  }
+}

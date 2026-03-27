@@ -7,9 +7,18 @@
     "safety_sheet_url": "https://cdn.shopify.com/s/files/1/0584/7236/6216/files/Bambu_TPU_for_AMS_MSDS.pdf?v=1730944633",
     "slicer_settings": {
         "bambustudio": {
+            "generic_id": "GFU99",
+            "id": "GFU02",
             "profile_name": "Bambu TPU for AMS"
         },
         "orcaslicer": {
+            "generic_id": "GFU99",
+            "id": "GFU02",
+            "profile_name": "Bambu TPU for AMS"
+        },
+        "elegooslicer": {
+            "generic_id": "GFU99",
+            "id": "GFU02",
             "profile_name": "Bambu TPU for AMS"
         }
     }

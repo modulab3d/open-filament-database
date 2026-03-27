@@ -7,9 +7,18 @@
     "safety_sheet_url": "https://cdn.shopify.com/s/files/1/0584/7236/6216/files/MSDS_Bambu_ASA_Aero.pdf?v=1712721417",
     "slicer_settings": {
         "bambustudio": {
+            "generic_id": "GFB98",
+            "id": "GFB02",
             "profile_name": "Bambu ASA-Aero"
         },
         "orcaslicer": {
+            "generic_id": "GFB98",
+            "id": "GFB02",
+            "profile_name": "Bambu ASA-Aero"
+        },
+        "elegooslicer": {
+            "generic_id": "GFB98",
+            "id": "GFB02",
             "profile_name": "Bambu ASA-Aero"
         }
     }

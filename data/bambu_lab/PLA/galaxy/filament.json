@@ -7,9 +7,18 @@
     "safety_sheet_url": "https://cdn.shopify.com/s/files/1/0584/7236/6216/files/MSDS_Bambu_PLA_Galaxy.pdf",
     "slicer_settings": {
         "bambustudio": {
+            "generic_id": "GFL99",
+            "id": "GFA15",
             "profile_name": "Bambu PLA Galaxy"
         },
         "orcaslicer": {
+            "generic_id": "GFL99",
+            "id": "GFA15",
+            "profile_name": "Bambu PLA Galaxy"
+        },
+        "elegooslicer": {
+            "generic_id": "GFL99",
+            "id": "GFA15",
             "profile_name": "Bambu PLA Galaxy"
         }
     }
